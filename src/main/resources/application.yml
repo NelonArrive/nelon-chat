@@ -1,3 +1,5 @@
+kind: Application
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/nelon_chat
@@ -19,7 +21,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:9090/realms/
+          issuer-uri: http://localhost:9090/realms/nelon-chat
 
   servlet:
     multipart:
@@ -30,3 +32,4 @@ spring:
     file:
       uploads:
         media-output.path: ./uploads
+
