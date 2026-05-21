@@ -1,0 +1,45 @@
+services:
+  postgres:
+    container_name: postgres-sql-wac
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: nelon_chat
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - nelon-chat
+    restart: unless-stopped
+
+  keycloak:
+    container_name: keycloak-wac
+    image: quay.io/keycloak/keycloak:26.6.1
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_DATABASE: nelon_chat
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: root
+      KC_HOSTNAME: localhost
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    depends_on:
+      - postgres
+    ports:
+      - "9090:8080"
+    networks:
+      - nelon-chat
+networks:
+  nelon-chat:
+    driver: bridge
+
+volumes:
+  postgres:
+    driver: local
+  keycloak:
+    driver: local
