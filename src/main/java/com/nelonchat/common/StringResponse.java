@@ -1,4 +1,4 @@
-package com.nelonchat.chat;
+package com.nelonchat.common;
 
 import lombok.*;
 

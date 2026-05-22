@@ -1,5 +1,6 @@
 package com.nelonchat.chat;
 
+import com.nelonchat.common.StringResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
