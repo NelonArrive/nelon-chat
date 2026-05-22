@@ -9,10 +9,10 @@ public class ChatMapper {
 			.id(chat.getId())
 			.name(chat.getChatName(senderId))
 			.unreadCount(chat.getUnreadMessages(senderId))
-			.lastMessage(chat.getLastMessages())
+			.lastMessage(chat.getLastMessage())
 			.isRecipientOnline(chat.getRecipient().isUserOnline())
 			.senderId(chat.getSender().getId())
-			.receiveId(chat.getRecipient().getId())
+			.receiverId(chat.getRecipient().getId())
 			.build();
 	}
 }

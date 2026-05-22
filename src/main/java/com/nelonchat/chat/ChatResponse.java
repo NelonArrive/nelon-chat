@@ -18,6 +18,5 @@ public class ChatResponse {
 	private LocalDateTime lastMessageTime;
 	private boolean isRecipientOnline;
 	private String senderId;
-	private String receiveId;
-	
+	private String receiverId;
 }
