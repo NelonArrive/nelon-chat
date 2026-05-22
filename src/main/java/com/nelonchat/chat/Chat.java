@@ -45,7 +45,7 @@ public class Chat extends BaseAuditingEntity {
 	private List<Message> messages;
 	
 	@Transient
-	public String getChatName(final String senderId) {
+	public String getChatName(String senderId) {
 		if (recipient.getId().equals(senderId)) {
 			return sender.getFirstName() + " " + sender.getLastName();
 		}
@@ -53,8 +53,16 @@ public class Chat extends BaseAuditingEntity {
 	}
 	
 	@Transient
-	public long getUnreadMessages(final String senderId) {
-		return messages
+	public String getTargetChatName(String senderId) {
+		if (sender.getId().equals(senderId)) {
+			return sender.getFirstName() + " " + sender.getLastName();
+		}
+		return recipient.getFirstName() + " " + recipient.getLastName();
+	}
+	
+	@Transient
+	public long getUnreadMessages(String senderId) {
+		return this.messages
 			.stream()
 			.filter(m -> m.getReceiverId().equals(senderId))
 			.filter(m -> MessageState.SENT == m.getState())
@@ -62,12 +70,12 @@ public class Chat extends BaseAuditingEntity {
 	}
 	
 	@Transient
-	public String getLastMessages() {
+	public String getLastMessage() {
 		if (messages != null && !messages.isEmpty()) {
-			if (messages.getFirst().getType() != MessageType.TEXT) {
+			if (messages.get(0).getType() != MessageType.TEXT) {
 				return "Attachment";
 			}
-			return messages.getFirst().getContent();
+			return messages.get(0).getContent();
 		}
 		return null;
 	}
@@ -75,7 +83,7 @@ public class Chat extends BaseAuditingEntity {
 	@Transient
 	public LocalDateTime getLastMessageTime() {
 		if (messages != null && !messages.isEmpty()) {
-			return messages.getFirst().getCreatedDate();
+			return messages.get(0).getCreatedDate();
 		}
 		return null;
 	}

@@ -39,7 +39,17 @@ public class MessageService {
 		
 		messageRepository.save(message);
 		
-		// todo notification
+		Notification notification = Notification.builder()
+			.chatId(chat.getId())
+			.messageType(request.getType())
+			.content(request.getContent())
+			.senderId(request.getSenderId())
+			.receiverId(request.getReceiverId())
+			.type(NotificationType.MESSAGE)
+			.chatName(chat.getTargetChatName(message.getSenderId()))
+			.build();
+		
+		notificationService.sendNotification(request.getReceiverId(), notification);
 	}
 	
 	public List<MessageResponse> findChatMessages(String chatId) {
