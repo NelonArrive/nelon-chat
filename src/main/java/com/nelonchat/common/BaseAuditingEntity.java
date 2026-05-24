@@ -3,7 +3,6 @@ package com.nelonchat.common;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.NamedQuery;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +28,6 @@ public class BaseAuditingEntity {
 	private LocalDateTime createdDate;
 	
 	@LastModifiedDate
-	@Column(name = "last_modified_date", insertable = false)
+	@Column(name = "last_modified_date")
 	private LocalDateTime lastModifiedDate;
 }

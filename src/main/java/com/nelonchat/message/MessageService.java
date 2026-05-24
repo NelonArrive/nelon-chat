@@ -9,6 +9,7 @@ import com.nelonchat.notification.NotificationService;
 import com.nelonchat.notification.NotificationType;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,8 +53,8 @@ public class MessageService {
 		notificationService.sendNotification(request.getReceiverId(), notification);
 	}
 	
-	public List<MessageResponse> findChatMessages(String chatId) {
-		return messageRepository.findMessagesByChatId(chatId)
+	public List<MessageResponse> findChatMessages(String chatId, int page, int size) {
+		return messageRepository.findMessagesByChatId(chatId, PageRequest.of(page, size))
 			.stream()
 			.map(mapper::toMessageResponse)
 			.toList();
@@ -105,6 +106,23 @@ public class MessageService {
 		notificationService.sendNotification(receiverId, notification);
 	}
 	
+	public void sendTypingNotification(String chatId, Authentication authentication) {
+		Chat chat = chatRepository.findById(chatId)
+			.orElseThrow(() -> new EntityNotFoundException("Chat not found"));
+		
+		final String recipientId = getRecipientId(chat, authentication);
+		final String senderId = getSenderId(chat, authentication);
+		
+		Notification notification = Notification.builder()
+			.chatId(chat.getId())
+			.type(NotificationType.TYPING)
+			.senderId(senderId)
+			.receiverId(recipientId)
+			.build();
+		
+		notificationService.sendNotification(recipientId, notification);
+	}
+	
 	private String getSenderId(Chat chat, Authentication authentication) {
 		if (chat.getSender().getId().equals(authentication.getName())) {
 			return chat.getSender().getId();
@@ -118,4 +136,5 @@ public class MessageService {
 		}
 		return chat.getSender().getId();
 	}
+	
 }

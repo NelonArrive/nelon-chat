@@ -28,6 +28,15 @@ public class MessageController {
 	
 	private final MessageService messageService;
 	
+	@GetMapping("/chat/{chat-id}")
+	public ResponseEntity<List<MessageResponse>> getAllMessages(
+		@PathVariable("chat-id") String chatId,
+		@RequestParam(value = "page", defaultValue = "0") int page,
+		@RequestParam(value = "size", defaultValue = "30") int size
+	) {
+		return ResponseEntity.ok(messageService.findChatMessages(chatId, page, size));
+	}
+	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public void saveMessage(@RequestBody MessageRequest message) {
@@ -51,11 +60,12 @@ public class MessageController {
 		messageService.setMessagesToSeen(chatId, authentication);
 	}
 	
-	@GetMapping("/chat/{chat-id}")
-	public ResponseEntity<List<MessageResponse>> getAllMessages(
-		@PathVariable("chat-id") String chatId
+	@PostMapping("/typing")
+	@ResponseStatus(HttpStatus.OK)
+	public void sendTypingNotification(
+		@RequestParam("chat-id") String chatId,
+		Authentication authentication
 	) {
-		
-		return ResponseEntity.ok(messageService.findChatMessages(chatId));
+		messageService.sendTypingNotification(chatId, authentication);
 	}
 }
